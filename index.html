@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Elo - Premium Video Task</title>
+    
+    <script src="https://pl28641264.effectivegatecpm.com/9a/a3/6d/9aa36d57f0075efe82de649c8189ea7d.js"></script>
+
+    <style>
+        :root { --primary: #00d2ff; --bg: #0f172a; --card: #1e293b; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .token-display { font-size: 3rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
+        .btn:disabled { background: #475569; cursor: not-allowed; }
+        .progress-bar { height: 12px; background: #334155; border-radius: 6px; margin-top: 15px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
+        .status-text { font-size: 0.8rem; margin-top: 10px; color: #94a3b8; }
+        .key-box { border: 2px dashed #475569; padding: 15px; margin-top: 10px; display: none; background: #000; color: #00ff00; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>DARK ELO</h1>
+    
+    <div class="card">
+        <p>Your Ad Tokens</p>
+        <div id="tokens" class="token-display">0</div>
+        <button id="adBtn" class="btn" onclick="startVideoTask()">START VIDEO TASK</button>
+        <div id="pBar" class="progress-bar"><div id="pFill" class="progress-fill"></div></div>
+        <p id="status" class="status-text">Watch the Social Bar Video to earn tokens!</p>
+    </div>
+
+    <div class="card">
+        <h3>Redeem Keys</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn" style="background: #10b981;" onclick="redeem(8, 1)">8 Tokens = 1 Day Key</button>
+            <button class="btn" style="background: #f59e0b;" onclick="redeem(15, 2)">15 Tokens = 2 Day Key</button>
+            <button class="btn" style="background: #ef4444;" onclick="redeem(26, 3)">26 Tokens = 3 Day Key</button>
+        </div>
+        <div id="keyDisplay" class="key-box"></div>
+    </div>
+</div>
+
+<script>
+    let tokens = localStorage.getItem('user_tokens') || 0;
+    let timeLeft = 15;
+    let timerId = null;
+    document.getElementById('tokens').innerText = tokens;
+
+    // HIGH SECURITY: Screen focus out bhayo bhane timer reset
+    window.onblur = function() {
+        if (timerId) {
+            clearInterval(timerId);
+            timeLeft = 15;
+            document.getElementById('pFill').style.width = "0%";
+            document.getElementById('adBtn').disabled = false;
+            document.getElementById('adBtn').innerText = "CHEAT DETECTED! RESTART";
+            document.getElementById('pBar').style.display = "none";
+            alert("Don't leave the page! Watch the full video.");
+        }
+    };
+
+    function startVideoTask() {
+        const btn = document.getElementById('adBtn');
+        const pBar = document.getElementById('pBar');
+        const pFill = document.getElementById('pFill');
+
+        btn.disabled = true;
+        pBar.style.display = "block";
+        
+        timerId = setInterval(() => {
+            timeLeft--;
+            btn.innerText = "Watching Video... " + timeLeft + "s";
+            pFill.style.width = ((15 - timeLeft) / 15 * 100) + "%";
+
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                tokens++;
+                localStorage.setItem('user_tokens', tokens);
+                document.getElementById('tokens').innerText = tokens;
+                
+                timeLeft = 15;
+                btn.disabled = false;
+                btn.innerText = "TASK COMPLETED! (Get More)";
+                pBar.style.display = "none";
+                pFill.style.width = "0%";
+                alert("1 Token Added!");
+            }
+        }, 1000);
+    }
+
+    function redeem(cost, days) {
+        if (tokens >= cost) {
+            tokens -= cost;
+            localStorage.setItem('user_tokens', tokens);
+            document.getElementById('tokens').innerText = tokens;
+            
+            let user = "DELO-" + Math.random().toString(36).substr(2, 5).toUpperCase();
+            let pass = Math.floor(1000 + Math.random() * 9000);
+            
+            const display = document.getElementById('keyDisplay');
+            display.style.display = "block";
+            display.innerHTML = `<strong>SUCCESS!</strong><br>Key: ${user}<br>Pass: ${pass}<br>Valid: ${days} Day(s)`;
+        } else {
+            alert("Need " + (cost - tokens) + " more tokens!");
+        }
+    }
+</script>
+
+</body>
+</html>
