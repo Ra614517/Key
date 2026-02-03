@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Elo - Premium Key Gen</title>
+    <style>
+        :root { --primary: #00d2ff; --bg: #0f172a; --card: #1e293b; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .token-display { font-size: 3rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
+        .btn:disabled { background: #475569; cursor: not-allowed; }
+        .progress-bar { height: 10px; background: #334155; border-radius: 5px; margin-top: 15px; overflow: hidden; display: none; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: linear; }
+        .key-box { border: 2px dashed #475569; padding: 10px; margin-top: 10px; display: none; background: #000; color: #00ff00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DARK ELO</h1>
+        <div class="card">
+            <p>Your Collected Tokens</p>
+            <div id="tokens" class="token-display">0</div>
+            <button id="adBtn" class="btn" onclick="startAd()">WATCH AD TO EARN</button>
+            <div id="pBar" class="progress-bar"><div id="pFill" class="progress-fill"></div></div>
+            <p id="status" style="font-size: 0.8rem; margin-top: 10px; color: #94a3b8;">Click button and wait 15s to earn token</p>
+        </div>
+
+        <div class="card">
+            <h3>Redeem Rewards</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn" style="background: #10b981;" onclick="redeem(8, 1)">8 Tokens = 1 Day Key</button>
+                <button class="btn" style="background: #f59e0b;" onclick="redeem(15, 2)">15 Tokens = 2 Day Key</button>
+                <button class="btn" style="background: #ef4444;" onclick="redeem(26, 3)">26 Tokens = 3 Day Key</button>
+            </div>
+            <div id="keyDisplay" class="key-box"></div>
+        </div>
+    </div>
+
+    <script>
+        let tokens = localStorage.getItem('user_tokens') || 0;
+        document.getElementById('tokens').innerText = tokens;
+
+        function startAd() {
+            const btn = document.getElementById('adBtn');
+            const pBar = document.getElementById('pBar');
+            const pFill = document.getElementById('pFill');
+            
+            // Open Adsterra link in new tab
+            window.open("https://www.effectivegatecpm.com/b70wi46r?key=4c9a27caa81b5b0c8faea402cdb73661", "_blank");
+
+            // Start Security Timer (15 seconds)
+            btn.disabled = true;
+            btn.innerText = "Processing Reward...";
+            pBar.style.display = "block";
+            pFill.style.width = "100%";
+            pFill.style.transition = "15s linear";
+
+            setTimeout(() => {
+                tokens++;
+                localStorage.setItem('user_tokens', tokens);
+                document.getElementById('tokens').innerText = tokens;
+                
+                btn.disabled = false;
+                btn.innerText = "WATCH AD TO EARN";
+                pBar.style.display = "none";
+                pFill.style.width = "0%";
+                pFill.style.transition = "0s";
+                alert("Token Added Successfully!");
+            }, 15000);
+        }
+
+        function redeem(cost, days) {
+            if (tokens >= cost) {
+                tokens -= cost;
+                localStorage.setItem('user_tokens', tokens);
+                document.getElementById('tokens').innerText = tokens;
+                
+                let key = "DELO-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+                let pass = Math.floor(1000 + Math.random() * 9000);
+                
+                const display = document.getElementById('keyDisplay');
+                display.style.display = "block";
+                display.innerHTML = `<strong>SUCCESS!</strong><br>Validity: ${days} Day(s)<br>User: ${key}<br>Pass: ${pass}`;
+            } else {
+                alert("You need " + (cost - tokens) + " more tokens!");
+            }
+        }
+    </script>
+</body>
+</html>
